@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kubire Salon - 加治ひとみ オンラインサロン</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200..900&display=swap" rel="stylesheet">
+    <style>
+        /* ========== サイドバー疑似表現 ========== */
+        .sidebar-mock {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 160;
+            width: 200px;
+            height: 100vh;
+            background-color: #007bff;
+            box-shadow: 1px 0 6px rgba(103,104,105,0.3);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .sidebar-mock__content {
+            padding: 20px 15px;
+            height: 100%;
+        }
+
+        /* ========== ヘッダー疑似表現 ========== */
+        .header-mock {
+            width: calc(100% - 200px);
+            height: 44px;
+            background-color: #fff;
+            display: flex;
+            flex-direction: row-reverse;
+            z-index: 81;
+            position: fixed;
+            top: 0px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .header-mock__content {
+            width: 100%;
+            background-color: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* メインコンテンツをサイドバー分右にずらし、ヘッダー分下にずらす */
+        body {
+            margin-left: 200px;
+            padding-top: 44px;
+        }
+
+        /* スマホではサイドバーとヘッダーを非表示 */
+        @media screen and (max-width: 960px) {
+            .sidebar-mock,
+            .header-mock {
+                display: none;
+            }
+            
+            body {
+                margin-left: 0;
+                padding-top: 0;
+            }
+        }
+
+        /* ========== リセット・基本設定 ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            text-decoration: none;
+            list-style: none;
+            font-family: "Noto Serif JP", serif;
+            font-weight: 300;
+            font-style: normal;
+        }
+
+        body {
+            background: #fff;
+            color: #000;
+        }
+
+        a {
+            color: #000;
+        }
+
+        button {
+            border: none;
+            display: block;
+            cursor: pointer;
+        }
+
+        /* ========== フォント設定 ========== */
+        .jpfont {
+            font-family: "Noto Serif JP", serif;
+            font-weight: 300;
+            font-style: normal;
+        }
+
+        .engFont {
+            font-family: "baskerville-display-pt", serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        /* ========== アニメーション ========== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s, transform 0.8s;
+        }
+
+        .fade-in.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .text-animation {
+            opacity: 0;
+        }
+
+        .text-animation.show {
+            opacity: 1;
+        }
+
+        .text-animation.show span {
+            display: inline-block;
+            opacity: 0;
+            animation: fadeInChar 0.5s forwards;
+        }
+
+        @keyframes fadeInChar {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ========== レスポンシブユーティリティ ========== */
+        @media screen and (min-width: 960px) {
+            .pc { display: block; }
+            .sp { display: none; }
+        }
+
+        @media screen and (max-width: 960px) {
+            .pc { display: none; }
+            .sp { display: block; }
+        }
+
+        /* ========== セクション共通スタイル ========== */
+        .section-title {
+            text-align: center;
+            margin-bottom: 3%;
+        }
+
+        .sectitleEn {
+            font-size: 4em;
+        }
+
+        .sectitlejp {
+            font-size: 0.8em;
+        }
+
+        /* ========== ヘッダー/メインエリア ========== */
+        #mainArea {
+            width: 100%;
+            height: 100vh;
+            background-image: url(https://image.osiro.it/pass/media_libraries/7741/images/original/main_pc.png);
+            background-size: cover;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+
+        #mainCnt {
+            width: 350px;
+            position: absolute;
+            top: 2%;
+            right: 15%;
+        }
+
+        #mainCnt h2 {
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        #mainCnt h2 img {
+            width: 100%;
+            height: auto;
+        }
+
+        #subTitle {
+            margin: 10% 0 2% 0;
+            padding: 5%;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        #subTitle li:first-child {
+            font-size: 1em;
+        }
+
+        #subTitle li:last-child {
+            font-size: 1em;
+            margin-top: 1%;
+        }
+
+        .subscBtn {
+            width: 100%;
+            padding: 3% 0;
+            background: #fff;
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+
+        /* ========== メッセージセクション ========== */
+        #message {
+            background: #F7F4F2;
+            padding: 6% 0;
+        }
+
+        #messagefirst {
+            text-align: center;
+            margin-bottom: 5%;
+        }
+
+        #messageText {
+            margin: 3% 0;
+        }
+
+        #messageText .title {
+            font-size: 1.5em;
+            margin: 1.5% 0;
+            font-weight: 500;
+        }
+
+        #messageText .text {
+            font-size: 0.85em;
+            line-height: 1.8;
+        }
+
+        .message-layout {
+            display: flex;
+            align-items: flex-start;
+            width: 90%;
+            margin: 8% 5%;
+            gap: 5%;
+        }
+
+        .message-layout .img {
+            width: 40%;
+        }
+
+        .message-layout .img img {
+            width: 100%;
+            height: auto;
+        }
+
+        .message-layout .textWrapper {
+            width: 60%;
+        }
+
+        .textWrapper .title {
+            font-size: 1.5em;
+            margin-bottom: 3%;
+            font-weight: 500;
+        }
+
+        .textWrapper .text {
+            font-size: 0.85em;
+            line-height: 1.7;
+        }
+
+        #messageFour {
+            text-align: center;
+            padding: 0 0 5% 0;
+        }
+
+        /* ========== サロンの魅力セクション ========== */
+        #charm {
+            background: #F0EFEF;
+            text-align: center;
+            padding: 3% 0 5% 0;
+        }
+
+        .charmCnt {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            justify-content: center;
+            gap: 3%;
+        }
+
+        .charmDetail {
+            width: 25%;
+            margin: 3% 0;
+        }
+
+        .charmDetail .img {
+            width: 45%;
+            margin: 0 auto 3% auto;
+        }
+
+        .charmDetail .img img {
+            width: 100%;
+        }
+
+        .charmDetail .title {
+            font-size: 1.2em;
+            margin: 3% 0;
+            font-weight: 500;
+        }
+
+        .charmDetail .text {
+            font-size: 0.9em;
+            width: 80%;
+            margin: 0 auto;
+            line-height: 1.7;
+            text-align: left;
+        }
+
+        /* ========== イベントセクション ========== */
+        #event {
+            padding: 8% 0;
+            background: #f5e5d5;
+        }
+
+        .event-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 85%;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 15px;
+        }
+
+        .event-card {
+            background: #fff;
+            padding: 2%;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+            width: 25%;
+        }
+
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 25px rgba(0,0,0,0.1);
+        }
+
+        .event-title {
+            font-size: 1.3em;
+            font-weight: 500;
+            text-align: center;
+            padding-bottom: 15px;
+        }
+
+        .event-card .img {
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-card .img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .event-card:hover .img img {
+            transform: scale(1.05);
+        }
+
+        .more-btn {
+            display: block;
+            width: 100%;
+            background: #1a1e25;
+            color: #fff;
+            padding: 15px 0;
+            margin-top: 16px;
+            border: none;
+            font-size: 14px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .more-btn:hover {
+            background: #bba18c;
+        }
+
+        /* ========== おすすめセクション ========== */
+        #feature {
+            text-align: center;
+            padding: 8% 0;
+            background: #fff;
+        }
+
+        .feature-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            width: calc(33% - 15px);
+            text-align: left;
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card label {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .feature-card input[type="checkbox"] {
+            margin-right: 10px;
+            width: 24px;
+            height: 24px;
+            appearance: none;
+            border: 1px solid #333;
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .feature-card input[type="checkbox"]:checked {
+            background-color: #f4f1ed;
+            border-color: #000000;
+        }
+
+        .feature-card input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 2px;
+            left: 6px;
+            color: black;
+            font-size: 14px;
+        }
+
+        .feature-card span {
+            font-size: 1.1em;
+            color: #000000;
+            line-height: 1.5;
+        }
+
+        /* ========== プロフィールセクション ========== */
+        #profile {
+            width: 100%;
+            background: #F5EBE1;
+            display: flex;
+            align-items: stretch;
+        }
+
+        #profile .img {
+            width: 45%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #profile .img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #profile .text {
+            width: 55%;
+            padding: 3%;
+            background: #F2F2F2;
+        }
+
+        #profileName {
+            text-align: center;
+            padding-bottom: 5%;
+        }
+
+        #profileName .profileImg {
+            width: 14%;
+            margin: 5% auto 0 auto;
+        }
+
+        #profileName .profileImg img {
+            width: 100%;
+            height: auto;
+        }
+
+        #profileName .title {
+            font-size: 3em;
+            font-family: "baskerville-display-pt", serif;
+        }
+
+        #profileName .name {
+            font-size: 0.9em;
+            letter-spacing: 0.1em;
+            margin-top: 5px;
+        }
+
+        #profileDetail {
+            display: flex;
+            justify-content: space-between;
+            gap: 5%;
+            font-size: 0.7em;
+            line-height: 1.8;
+        }
+
+        .profile-left, .profile-right {
+            width: 50%;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* ========== 口コミセクション ========== */
+        #reviews {
+            padding: 8% 0;
+            background: #fff;
+        }
+
+        .reviews-container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 5% auto 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            justify-content: center;
+        }
+
+        .review-item {
+            width: 40%;
+            padding: 2%;
+            background: #F7F4F2;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .review-profile {
+            text-align: center;
+            margin-bottom: 3%;
+        }
+
+        .review-image {
+            width: 80px;
+            height: 80px;
+            overflow: hidden;
+            border-radius: 50%;
+            margin: 4% auto;
+        }
+
+        .review-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .review-info {
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .info-location {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .review-content {
+            font-size: 0.9em;
+            line-height: 1.8;
+        }
+
+        /* ========== Q&Aセクション ========== */
+        #qAndA {
+            padding: 5% 0;
+            background: #fff;
+        }
+
+        #qAndAWrapper {
+            width: 65%;
+            margin: 0 auto;
+        }
+
+        .qandClm {
+            margin: 5% 0;
+        }
+
+        #qAndAWrapper ul {
+            display: flex;
+            margin: 1% 0;
+            font-size: 1.25em;
+        }
+
+        .qTitle, .aTitle {
+            width: 10%;
+            min-height: 50px;
+            background: #2f2f2f;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qText {
+            width: 90%;
+            background: #F5EBE1;
+            padding: 3%;
+            display: flex;
+            align-items: center;
+        }
+
+        .aText {
+            width: 90%;
+            background: #F2F2F2;
+            padding: 3%;
+            display: flex;
+            align-items: center;
+        }
+
+        /* ========== スケジュール・入会セクション ========== */
+        #joinUs {
+            padding: 6% 0 3% 0;
+            text-align: center;
+            background: #F5EDE5;
+        }
+
+        #scheduleWrapper {
+            width: 85%;
+            margin: 0 auto;
+            background: #fff;
+            padding: 0 0 4% 0;
+        }
+
+        #scheduleCnt {
+            width: 100%;
+            padding: 4% 0 0 0;
+        }
+
+        #scheduleCnt ul {
+            width: 50%;
+            margin: 3% auto;
+            padding: 2%;
+            border-left: 1px solid #000;
+            border-top: 1px solid #f0f0f0;
+            border-right: 1px solid #f0f0f0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        #scheduleCnt .title {
+            font-size: 1.5em;
+            font-weight: 500;
+            padding-bottom: 2%;
+        }
+
+        #scheduleCnt .text {
+            font-size: 1em;
+        }
+
+        #underJoin {
+            background-color: #F5EBE1;
+            padding: 0 0 7% 0;
+        }
+
+        .card {
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 79%;
+        }
+
+        .card h1 {
+            font-size: 30px;
+            margin-bottom: 2%;
+        }
+
+        .card h2 {
+            font-size: 15px;
+            margin-bottom: 3%;
+        }
+
+        .card .price {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5%;
+        }
+
+        .card button {
+            background: #1a1e25;
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            width: 100%;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .card button:hover {
+            background: #2D3748;
+        }
+
+        /* ========== 注意事項セクション ========== */
+        #notice {
+            padding: 5% 0 8% 0;
+            text-align: center;
+            background: #F5F4F4;
+        }
+
+        #notice .text {
+            width: 75%;
+            margin: 0 auto;
+            font-size: 0.8em;
+            line-height: 1.5;
+            text-align: left;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* ========== フッター ========== */
+        footer {
+            width: 100%;
+            background: #000;
+            padding: 3% 0;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        footer .logo {
+            width: 3%;
+            position: absolute;
+            left: 3%;
+        }
+
+        footer img {
+            width: 100%;
+            height: auto;
+        }
+
+        footer .copyright {
+            font-size: 0.8em;
+            color: #fff;
+            position: absolute;
+            right: 5%;
+        }
+
+        footer a {
+            color: #fff;
+        }
+
+        /* ========== 実績セクション ========== */
+        .achievement-item {
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .achievement-item .pc-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .achievement-item .sp-image {
+            display: none;
+            width: 80%;
+            max-width: 500px;
+            height: auto;
+            margin: 0 auto;
+        }
+
+        /* ========== スマートフォン対応 ========== */
+        @media screen and (max-width: 960px) {
+            .sectitleEn {
+                font-size: 3.5em;
+            }
+
+            /* メインエリア */
+            #mainArea {
+                background-image: url(https://image.osiro.it/pass/media_libraries/7756/images/original/main_sp-min_%282%29.png?1737663537);
+                background-position: center;
+            }
+
+            #mainCnt {
+                width: 80%;
+                position: relative;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+            #mainCnt h2 {
+                width: 50%;
+            }
+
+            #subTitle {
+                width: 90%;
+                margin: 10% 5% 2% 5%;
+            }
+
+            .subscBtn {
+                width: 90%;
+                margin: 0 5%;
+                padding: 5%;
+            }
+
+            /* メッセージセクション */
+            #messagefirst {
+                padding: 15% 0 5% 0;
+            }
+
+            #messageText {
+                width: 85%;
+                margin: 10% auto;
+            }
+
+            #messageText .title {
+                font-size: 1.3em;
+                margin: 5% 0;
+            }
+
+            #messageText .text {
+                font-size: 0.75em;
+            }
+
+            .message-layout {
+                display: block;
+                width: 80%;
+                margin: 0 10%;
+            }
+
+            .message-layout .img,
+            .message-layout .textWrapper {
+                width: 100%;
+                margin: 0;
+            }
+
+            .textWrapper .title {
+                font-size: 1.3em;
+                margin: 8% auto;
+                text-align: center;
+            }
+
+            .textWrapper .text {
+                font-size: 0.8em;
+            }
+
+            /* 魅力セクション */
+            #charm {
+                padding: 15% 0;
+            }
+
+            .charmCnt {
+                width: 90%;
+                margin: 0 auto;
+                display: block;
+            }
+
+            .charmDetail {
+                width: 100%;
+                margin: 5% 0;
+            }
+
+            .charmDetail .img {
+                width: 50%;
+            }
+
+            .charmDetail .title {
+                font-size: 1.3em;
+            }
+
+            .charmDetail .text {
+                width: 100%;
+                font-size: 0.9em;
+            }
+
+            /* イベントセクション */
+            #event {
+                padding: 12% 0;
+                margin: 0 0 8% 0;
+            }
+
+            .event-grid {
+                display: block;
+                width: 100%;
+                margin: 0 auto;
+            }
+
+            .event-card {
+                width: 95%;
+                margin: 3% auto;
+                padding: 5% 4%;
+            }
+
+            .event-title {
+                font-size: 18px;
+                margin-bottom: 20px;
+            }
+
+            /* おすすめセクション */
+            .feature-container {
+                width: 90%;
+                gap: 15px;
+            }
+
+            .feature-card {
+                width: calc(50% - 15px);
+            }
+
+            /* プロフィールセクション */
+            #profile {
+                flex-direction: column;
+                padding: 7% 0 0 0;
+            }
+
+            #profile .img {
+                width: 100%;
+                height: auto;
+                padding: 0 5% 5% 5%;
+            }
+
+            #profile .text {
+                width: 100%;
+            }
+
+            #profileName .profileImg {
+                width: 10%;
+            }
+
+            #profileName .title {
+                font-size: 2.5em;
+            }
+
+            #profileDetail {
+                flex-direction: column;
+                text-align: center;
+                font-size: 0.8em;
+            }
+
+            .profile-left, .profile-right {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+
+            /* 口コミセクション */
+            .review-item {
+                width: calc(50% - 10px);
+                min-width: 280px;
+                padding: 20px;
+            }
+
+            /* Q&A */
+            #qAndAWrapper {
+                width: 95%;
+                font-size: 0.7em;
+            }
+
+            .qText, .aText {
+                padding: 0 3%;
+            }
+
+            /* スケジュール */
+            #scheduleWrapper {
+                width: 95%;
+                margin: 0 auto 3% auto;
+                padding: 0 0 5% 0;
+            }
+
+            #scheduleCnt ul {
+                width: 90%;
+                padding: 5% 2%;
+            }
+
+            #scheduleCnt .title {
+                font-size: 1.3em;
+            }
+
+            #scheduleCnt .text {
+                font-size: 0.8em;
+            }
+
+            /* 入会 */
+            .card {
+                width: 85%;
+                padding: 30px;
+            }
+
+            /* 注意事項 */
+            #notice {
+                padding: 10% 0;
+            }
+
+            /* フッター */
+            footer {
+                padding: 10% 0;
+            }
+
+            footer .logo {
+                width: 14%;
+            }
+
+            footer .copyright {
+                font-size: 0.75em;
+                right: 8%;
+            }
+
+            /* 実績 */
+            .achievement-item .pc-image {
+                display: none;
+            }
+
+            .achievement-item .sp-image {
+                width: 95%;
+                display: block;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .feature-card {
+                width: 100%;
+            }
+
+            .review-item {
+                width: 100%;
+            }
+
+            #profileName .profileImg {
+                width: 12%;
+            }
+
+            #profileName .title {
+                font-size: 2em;
+            }
+
+            .profile-left, .profile-right {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- サイドバー疑似表現 -->
+    <div class="sidebar-mock">
+        <div class="sidebar-mock__content">
+        </div>
+    </div>
+
+    <!-- ヘッダー疑似表現 -->
+    <div class="header-mock">
+        <div class="header-mock__content">
+        </div>
+    </div>
+
+    <!-- メインエリア -->
+    <section id="mainArea">
+        <div id="mainCnt">
+            <h2><img alt="ロゴ" src="https://image.osiro.it/pass/media_libraries/7537/images/original/logo.png?1719286516" /></h2>
+            <ul id="subTitle">
+                <li>加治ひとみ オンラインサロン</li>
+                <li>なりたい自分をみつけ、<br />なりたい自分に変わる</li>
+            </ul>
+            <button class="subscBtn">募集停止中</button>
+        </div>
+    </section>
+
+    <!-- メッセージセクション -->
+    <section id="message">
+        <div id="messagefirst">
+            <ul class="fade-in section-title">
+                <li class="sectitleEn engFont">Message</li>
+                <li class="sectitlejp">メッセージ</li>
+            </ul>
+            <ul id="messageText">
+                <li class="title fade-in">「こだわるべきは習慣」</li>
+                <li class="text text-animation">くびれは単なる体型ではなく、日々の習慣の現れ。<br />女性らしいくびれは正しい食生活や運動が必要とされます。<br />身体が整えば自律神経も整い、お肌も心も潤います。<br />そんな整った女性のシンボルとして、<br />「Kubire Salon」という名前をつけました。</li>
+            </ul>
+        </div>
+
+        <div class="message-layout">
+            <p class="img fade-in"><img src="https://image.osiro.it/pass/media_libraries/7542/images/original/message_01.png?1719438106" /></p>
+            <ul class="textWrapper fade-in">
+                <li class="title">「20代の頃より、30歳を過ぎた今の自分のほうが好き」</li>
+                <li class="text pc">私は20代前半まで人生に夢や目標がなく、なんとなく生きているだけでした。<br />仕事も恋愛も人並みにして、周りからは楽そうに見られても、<br />どこか心は満たされない。身体と心のバランスが整わず、<br />漠然とした不安が付きまとい、自分に自信がなかった時期もありました。<br /><br />自分の人生なのに決定権を自分が持っていないこの事実が私を苦しめていたと思います。<br />そんな私を救ったのが腸活です。<br />腸活は一夜にしてならず、揺るぎない土台は習慣によってつくられるもの。<br /><br />腸にいい習慣や運動<br />ひとつひとつ、自分との小さな約束を守って<br />自分自身との信頼関係を深めていきました。<br /><br />腸活や運動の習慣化を通して、たくさんの人たちと出会い、<br />多様な考え方や価値観に触れ、人生において「完璧=幸せ」ではないということに気づきました。<br />不幸だと決めつけていたけど、どこかで変わりたいと思っていたこの強い想いが<br />腸活を引き寄せ30歳でモデルデビューという奇跡を起こせたのかも知れません。<br />努力により自信も生まれ、新たに挑戦する余白ができる。<br /><br />だから、20代の頃より、30歳を過ぎた今の自分のほうが好き。<br /><br />何かを始めるのに遅すぎるスタートはないのです。</li>
+                <li class="text sp">私は20代前半まで人生に夢や目標がなく、なんとなく生きているだけでした。 仕事も恋愛も人並みにして、周りからは楽そうに見られても、 どこか心は満たされない。身体と心のバランスが整わず、 漠然とした不安が付きまとい、自分に自信がなかった時期もありました。<br /><br />自分の人生なのに決定権を自分が持っていないこの事実が私を苦しめていたと思います。 そんな私を救ったのが腸活です。 腸活は一夜にしてならず、揺るぎない土台は習慣によってつくられるもの。<br /><br />腸にいい習慣や運動 ひとつひとつ、自分との小さな約束を守って 自分自身との信頼関係を深めていきました。<br /><br />腸活や運動の習慣化を通して、たくさんの人たちと出会い、 多様な考え方や価値観に触れ、人生において「完璧=幸せ」ではないということに気づきました。 不幸だと決めつけていたけど、どこかで変わりたいと思っていたこの強い想いが 腸活を引き寄せ30歳でモデルデビューという奇跡を起こせたのかも知れません。 努力により自信も生まれ、新たに挑戦する余白ができる。<br /><br />だから、20代の頃より、30歳を過ぎた今の自分のほうが好き。<br /><br />何かを始めるのに遅すぎるスタートはないのです。</li>
+            </ul>
+        </div>
+
+        <div class="message-layout fade-in">
+            <ul class="textWrapper">
+                <li class="title">『ほんのちょっとの習慣があなたを特別にする』</li>
+                <li class="text pc">このオンラインサロンでは、『心・美・体』を整え磨いていくために<br />必要な出会いの場、学び、情報を提供します。<br /><br />腸活、フィットネス、食、美容、読書、キャリア、語学などそれぞれの分野のプロの方から<br />人生の役にたつ経験や知識を学び、習慣化していける環境があります。<br /><br />オフラインでは、オフ会やトレーニングイベント、メンバー主催のイベントなど<br />普段会えないような仲間と楽しく有意義な時間を過ごしましょう。<br />もちろん私も参加するものもたくさんあります。<br /><br />一冊の本が思考を変えてくれるように。ひとつの旅が新しい発見をくれるように。<br /><br />さまざまな出会いに触れみなさんの人生が豊かになる"自分だけの正解"を見つけましょう。</li>
+                <li class="text sp">このオンラインサロンでは、『心・美・体』を整え磨いていくために 必要な出会いの場、学び、情報を提供します。<br /><br />腸活、フィットネス、食、美容、読書、キャリア、語学などそれぞれの分野のプロの方から 人生の役にたつ経験や知識を学び、習慣化していける環境があります。<br /><br />オフラインでは、オフ会やトレーニングイベント、メンバー主催のイベントなど 普段会えないような仲間と楽しく有意義な時間を過ごしましょう。 もちろん私も参加するものもたくさんあります。<br /><br />一冊の本が思考を変えてくれるように。ひとつの旅が新しい発見をくれるように。<br /><br />さまざまな出会いに触れみなさんの人生が豊かになる"自分だけの正解"を見つけましょう。</li>
+            </ul>
+            <p class="img"><img src="https://image.osiro.it/pass/media_libraries/7539/images/original/message_02.png?1719286527" /></p>
+        </div>
+
+        <div id="messageFour">
+            <ul id="messageText">
+                <li class="title fade-in">「最後に」</li>
+                <li class="text text-animation">そして私もまだまだ夢の途中。<br />私が自分の夢を追いかけることで、<br />誰かの夢の後押しができたら嬉しいです。<br />ここは私のオンラインサロンではなく、<br />みんなのオンラインサロンです。<br />「誰かの頑張りが、誰かの原動力になる」<br />そんなサロンになることを願っています。</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- サロンの魅力セクション -->
+    <section id="charm" class="fade-in">
+        <ul class="section-title">
+            <li class="sectitleEn engFont">VALUE</li>
+            <li class="sectitlejp">-Kubire Salonの魅力 -</li>
+        </ul>
+        <div class="charmCnt">
+            <ul class="charmDetail">
+                <li class="img"><img src="https://image.osiro.it/pass/media_libraries/7548/images/original/charm_01_sp.png?1719444210" /></li>
+                <li class="title">一流を知り、一流に触れる</li>
+                <li class="text">オンライン、オフラインのイベントを通じて普段出会えないプロフェッショナルの方々から知識や経験を学ぶことができます。知識や経験を学ぶことで、変わるきっかけを提供します。</li>
+            </ul>
+            <ul class="charmDetail">
+                <li class="img"><img src="https://image.osiro.it/pass/media_libraries/7549/images/original/charm_02_sp.png?1719444213" /></li>
+                <li class="title">習慣化のサポート</li>
+                <li class="text">毎日、習慣化のためのイベントを開催。なりたい自分に近づくサポートを行います。もちろん加治もイベントに参加します。</li>
+            </ul>
+            <ul class="charmDetail">
+                <li class="img"><img src="https://image.osiro.it/pass/media_libraries/7550/images/original/charm_03_sp.png?1719444216" /></li>
+                <li class="title">仲間同士の繋がり</li>
+                <li class="text">同じ趣味を持った仲間たちと共に楽しいひと時を過ごすのはもちろん、異業種の方との繋がりも増えるので、新しい刺激や発想、キャリアアップにつながります。</li>
+            </ul>
+            <ul class="charmDetail">
+                <li class="img"><img src="https://image.osiro.it/pass/media_libraries/7551/images/original/charm_04_sp.png?1719444218" /></li>
+                <li class="title">学びと楽しさの両立</li>
+                <li class="text">習慣化する上で、まずは自分が楽しいと思えることが重要だと考えています。学びをただの義務として捉えるのではなく、"学ぶこと=楽しい"人生の役立つ、"楽しく学べるコンテンツ"を発信します。</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- イベントセクション -->
+    <section id="event">
+        <ul class="section-title fade-in">
+            <li class="sectitleEn engFont">EVENT</li>
+            <li class="sectitlejp">- イベント -</li>
+        </ul>
+        <div class="event-grid">
+            <div class="event-card fade-in">
+                <h3 class="event-title">朝活zoom</h3>
+                <div class="img"><img src="https://image.osiro.it/pass/media_libraries/7711/images/original/%E6%9C%9D%E6%B4%BB.png?1735842607" /></div>
+                <a href="https://kubire-salon.com/zoom" class="more-btn" target="_blank" rel="noopener">もっと見る</a>
+            </div>
+            <div class="event-card fade-in">
+                <h3 class="event-title">くびれMEET UP</h3>
+                <div class="img"><img src="https://image.osiro.it/pass/media_libraries/7729/images/original/meetup_01.png?1737528791" alt="トレーニングイベント" /></div>
+                <a href="https://kubire-salon.com/meetup" class="more-btn" target="_blank" rel="noopener">もっと見る</a>
+            </div>
+            <div class="event-card fade-in">
+                <h3 class="event-title">くびれラボ</h3>
+                <div class="img"><img src="https://image.osiro.it/pass/media_libraries/7727/images/original/lab_02.png?1737528786" alt="くびれラボ" /></div>
+                <a href="https://kubire-salon.com/lab" class="more-btn" target="_blank" rel="noopener">もっと見る</a>
+            </div>
+            <div class="event-card fade-in">
+                <h3 class="event-title">リトリート合宿</h3>
+                <div class="img"><img src="https://image.osiro.it/pass/media_libraries/7732/images/original/retreat_01.png?1737528806" alt="リトリート合宿" /></div>
+                <a href="https://kubire-salon.com/retreat" class="more-btn" target="_blank" rel="noopener">もっと見る</a>
+            </div>
+            <div class="event-card fade-in">
+                <h3 class="event-title">部活/メンバー主催イベント</h3>
+                <div class="img"><img src="https://image.osiro.it/pass/media_libraries/7723/images/original/event_01.png?1737528775" /></div>
+                <a href="https://kubire-salon.com/club" class="more-btn" target="_blank" rel="noopener">もっと見る</a>
+            </div>
+            <div class="event-card fade-in">
+                <h3 class="event-title">オフ会</h3>
+                <div class="img"><img src="https://image.osiro.it/pass/media_libraries/7757/images/original/off.png?1737772284" /></div>
+                <a href="https://kubire-salon.com/off" class="more-btn" target="_blank" rel="noopener">もっと見る</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 口コミセクション -->
+    <section id="reviews">
+        <div class="section-title fade-in">
+            <p class="sectitleEn engFont">Reviews</p>
+            <p class="sectitlejp">- メンバーの声 -</p>
+        </div>
+        <div class="reviews-container fade-in">
+            <div class="review-item">
+                <div class="review-profile">
+                    <div class="review-image"><img src="https://image.osiro.it/pass/media_libraries/7746/images/original/r_01.png?1737654842" /></div>
+                    <div class="review-info">
+                        <p class="info-location">東京都 / 32歳</p>
+                    </div>
+                </div>
+                <div class="review-content">
+                    <p>まずカフェでかぢちゃん、サロメさんと会え綺麗すぎてそこでスイッチ入りました! 楽しいからポジティブになれているし、仕事でクレーム来てもへこまずしっかり相手の気持ちをキャッチできるようにメンタル強くなりました。 また、ポジティブだから風邪もひかず健康です！8月から本格的に腸活などの習慣化に取り組み8キロ体重が落ちました。周りからものすごいパワーをいただいてます！</p>
+                </div>
+            </div>
+            <div class="review-item">
+                <div class="review-profile">
+                    <div class="review-image"><img src="https://image.osiro.it/pass/media_libraries/7747/images/original/r_02.png?1737654844" /></div>
+                    <div class="review-info">
+                        <p class="info-location">大阪府 / 28歳</p>
+                    </div>
+                </div>
+                <div class="review-content">
+                    <p>朝の時間を自分のために使うのってこんなに1日を豊かにさせてくれるのか、と驚きも含めて良かったなと思います。やはり朝は集中して勉強できますね…！ また、1人だと中々起きれない時も、くびれサロンの朝活に参加したいという理由で早く起きれて、そのために早く就寝しようと、携帯をいじったり無駄な時間も減らせてる、良い循環になってます✨</p>
+                </div>
+            </div>
+            <div class="review-item">
+                <div class="review-profile">
+                    <div class="review-image"><img src="https://image.osiro.it/pass/media_libraries/7748/images/original/r_03.png?1737654846" /></div>
+                    <div class="review-info">
+                        <p class="info-location">福岡県 / 35歳</p>
+                    </div>
+                </div>
+                <div class="review-content">
+                    <p>メンバーさんがそれぞれ自分を向上させる為行動していて、刺激をいただけることです！ 寝る時間も遅く、朝もギリギリまで寝ていましたが、朝活に参加してかじちゃんのコツコツやっている姿勢を近くで見せていただけて、メンバーさんともコミュニケーション取ることで、自分もこうしていこうというプランや目標が明確になってきています！ 自分の中に筋がピーンッ！！と通ったように感じています！！！ 今では朝活に参加したいから早く寝よう！という考えになったくらい変化がありました♡</p>
+                </div>
+            </div>
+            <div class="review-item">
+                <div class="review-profile">
+                    <div class="review-image"><img src="https://image.osiro.it/pass/media_libraries/7749/images/original/r_04.png?1737655782" /></div>
+                    <div class="review-info">
+                        <p class="info-location">沖縄 / 20歳</p>
+                    </div>
+                </div>
+                <div class="review-content">
+                    <p>メンバーさんがそれぞれ自分を向上させる為行動していて、刺激をいただけることです！ 寝る時間も遅く、朝もギリギリまで寝ていましたが、朝活に参加してかじちゃんのコツコツやっている姿勢を近くで見せていただけて、メンバーさんともコミュニケーション取ることで、自分もこうしていこうというプランや目標が明確になってきています！ 自分の中に筋がピーンッ！！と通ったように感じています！！！ 今では朝活に参加したいから早く寝よう！という考えになったくらい変化がありました♡</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- おすすめセクション -->
+    <section id="feature">
+        <ul class="section-title fade-in">
+            <li class="sectitleEn engFont">RECOMMEND</li>
+            <li class="sectitlejp">- こんな方へおすすめ -</li>
+        </ul>
+        <div class="feature-container fade-in">
+            <div class="feature-card"><label><input type="checkbox" checked /><span>健康的にやせたい</span></label></div>
+            <div class="feature-card"><label><input type="checkbox" checked /><span>腸活に興味がある</span></label></div>
+            <div class="feature-card"><label><input type="checkbox" checked /><span>人生に変化を求めている</span></label></div>
+            <div class="feature-card"><label><input type="checkbox" checked /><span>良い習慣を定着させたい</span></label></div>
+            <div class="feature-card"><label><input type="checkbox" checked /><span>趣味嗜好が合う仲間と繋がりたい</span></label></div>
+            <div class="feature-card"><label><input type="checkbox" checked /><span>楽しく学べる環境が欲しい</span></label></div>
+        </div>
+    </section>
+
+    <!-- プロフィールセクション -->
+    <section id="profile" class="fade-in">
+        <p class="img"><img src="https://image.osiro.it/pass/media_libraries/7535/images/original/kaji_Profile.png?1719286509" /></p>
+        <div class="text fade-in">
+            <ul id="profileName">
+                <li class="profileImg"><img src="https://image.osiro.it/pass/media_libraries/7536/images/original/logo_script.png?1719286512" /></li>
+                <li class="title engFont fade-in">PROFILE</li>
+                <li class="name fade-in">- 加治ひとみ -</li>
+            </ul>
+            <div id="profileDetail">
+                <div class="profile-left">
+                    <ul>
+                        <li>生年月日:1987年8月26日(37歳)</li>
+                        <li>出身地:東京都</li>
+                        <li>身長:164cm ウエスト:56cm</li>
+                    </ul>
+                </div>
+                <div class="profile-right">
+                    <ul>
+                        <li>特技: 料理、腸活、ピラティス、運動</li>
+                        <li>趣味: 読書・テニス/ピックルボール・アニメ</li>
+                        <li>資格: 美腸アドバイザー</li>
+                        <li>「2021美容腸活クイーン」受賞</li>
+                        <li>ナチュラルフード・コーディネーター</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 実績セクション -->
+    <div class="achievement-item fade-in">
+        <img class="pc-image" src="https://image.osiro.it/pass/media_libraries/7751/images/original/work_pc.png?1737660460" alt="実績 PC表示用" />
+        <img class="sp-image" src="https://image.osiro.it/pass/media_libraries/7752/images/original/work_sp.png?1737660463" alt="実績 スマートフォン表示用" />
+    </div>
+
+    <!-- スケジュールセクション -->
+    <section id="joinUs">
+        <ul class="section-title fade-in">
+            <li class="sectitleEn engFont">SCHEDULE</li>
+            <li class="sectitlejp">- スケジュール -</li>
+        </ul>
+        <div id="scheduleWrapper" class="fade-in">
+            <div id="scheduleCnt">
+                <ul>
+                    <li class="title">応募受付期間</li>
+                    <li class="text">2025年1月26日(日) 12:00 ~ 1月31日23:59まで</li>
+                </ul>
+                <ul>
+                    <li class="title">新メンバーオリエンテーション</li>
+                    <li class="text">2025年 2月1日(土) 11:00 ~ 12:00 / 2月9日(日) 時間未定</li>
+                </ul>
+                <ul>
+                    <li class="title">新メンバー歓迎会</li>
+                    <li class="text">（東京：2月後半）/（大阪：3月）</li>
+                </ul>
+                <ul>
+                    <li class="title">初回オンラインイベント</li>
+                    <li class="text">くびれラボ「ヨガクリエイターayaさんによるスペシャルレッスン」: 2025年2月1日(土) 17:00 ~ 18:30</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 入会セクション -->
+    <section id="underJoin" class="fade-in">
+        <ul class="section-title fade-in">
+            <li class="sectitleEn engFont">JOIN US</li>
+            <li class="sectitlejp">会員登録</li>
+        </ul>
+        <div class="card">
+            <h1>Kubire Salon</h1>
+            <h2>(月額会員プラン)</h2>
+            <div class="price">¥ 3,300</div>
+            <button>募集停止中</button>
+        </div>
+    </section>
+
+    <!-- Q&Aセクション -->
+    <section id="qAndA" class="fade-in">
+        <ul class="section-title">
+            <li class="sectitleEn engFont">Q&A</li>
+            <li class="sectitlejp">- よくある質問 -</li>
+        </ul>
+        <div id="qAndAWrapper">
+            <div class="qandClm fade-in">
+                <ul>
+                    <li class="qTitle">Q</li>
+                    <li class="qText">月額会費はいくらですか？</li>
+                </ul>
+                <ul>
+                    <li class="aTitle">A</li>
+                    <li class="aText">3,300円(税込)となります。</li>
+                </ul>
+            </div>
+            <div class="qandClm fade-in">
+                <ul>
+                    <li class="qTitle">Q</li>
+                    <li class="qText">対応している支払い方法はなんですか？</li>
+                </ul>
+                <ul>
+                    <li class="aTitle">A</li>
+                    <li class="aText">以下のお支払い方法がご利用いただけます。<br /><br />・クレジットカード（VISA、Mastercard、JCB、American Express、Diners Club、Discover）<br /><br />・デビットカード（サブスクリプションに対応しているデビットカードのみ）<br /><br />また、クレジットカードをお持ちでない場合には、ウォレットアプリ「Kyash」の利用を推奨しています。詳細はサービス提供サイトにてご確認ください。</li>
+                </ul>
+            </div>
+            <div class="qandClm fade-in">
+                <ul>
+                    <li class="qTitle">Q</li>
+                    <li class="qText">入会手続きに必要なものは何ですか？</li>
+                </ul>
+                <ul>
+                    <li class="aTitle">A</li>
+                    <li class="aText">メールアドレスとクレジットカード情報をお持ちであればご入会いただけます。</li>
+                </ul>
+            </div>
+            <div class="qandClm fade-in">
+                <ul>
+                    <li class="qTitle">Q</li>
+                    <li class="qText">イベントはどのくらい開催されますか？</li>
+                </ul>
+                <ul>
+                    <li class="aTitle">A</li>
+                    <li class="aText">運営公式イベントはオンライン/オフラインそれぞれ月１回行なっております。そのほかにもメンバー主催イベントなども多数開催されております</li>
+                </ul>
+            </div>
+            <div class="qandClm fade-in">
+                <ul>
+                    <li class="qTitle">Q</li>
+                    <li class="qText">地方在住でも参加できますか？</li>
+                </ul>
+                <ul>
+                    <li class="aTitle">A</li>
+                    <li class="aText">オンラインサロンなので、ネット環境さえあれば、毎日どこからでもイベントに参加いただけます。</li>
+                </ul>
+            </div>
+            <div class="qandClm fade-in">
+                <ul>
+                    <li class="qTitle">Q</li>
+                    <li class="qText">忙しくて参加できるか不安です…</li>
+                </ul>
+                <ul>
+                    <li class="aTitle">A</li>
+                    <li class="aText">日常生活を大きく変える必要はありません。朝活Zoomは可能な日だけでOK。アーカイブ視聴もできるので、いつでも学びを得られます。</li>
+                </ul>
+            </div>
+            <div class="qandClm fade-in">
+                <ul>
+                    <li class="qTitle">Q</li>
+                    <li class="qText">腸活や運動に関する知識がない初心者ですが大丈夫？</li>
+                </ul>
+                <ul>
+                    <li class="aTitle">A</li>
+                    <li class="aText">むしろ初心者大歓迎です。専門家による「くびれラボ」では基礎から学べますし、わからないことは気軽に質問できます。</li>
+                </ul>
+            </div>
+            <div class="qandClm fade-in">
+                <ul>
+                    <li class="qTitle">Q</li>
+                    <li class="qText">サロンメンバーと仲良くなれるか心配です…</li>
+                </ul>
+                <ul>
+                    <li class="aTitle">A</li>
+                    <li class="aText">第二期募集のメンバー同士・既存メンバーで仲良くなれるよう歓迎会をオンライン・オフラインで実施します！自分から話しかけづらいあなたも溶け込めるように運営メンバーでサポートします。</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 注意事項セクション -->
+    <section id="notice" class="fade-in">
+        <ul class="section-title">
+            <li class="sectitleEn engFont">NOTICE</li>
+            <li class="sectitlejp">- 注意事項 -</li>
+        </ul>
+        <p class="text">※Kubire Salonでの投稿は、メンバーのみの限定公開を前提にしています。よって、コンテンツ（動画・写真・文章等）の無断転用や許可なしでの投稿は禁止します。<br /><br />※尊重し合い、安心していられるコミュニティにするため、誹謗中傷や運営側が不適切と判断したコメントは削除させて頂く場合がございます。<br /><br />※メンバーへの迷惑行為、情報商材またはそれ相当と判断されるビジネスに関わる方、宗教・保険・マルチ商法へ勧誘を意図される方の登録はお断りします。<br />確認された方には、警告や強制退会などの措置を取らせて頂くことがあります。<br /><br />※実名での参加を推奨しております。オフラインでの交流も今後予定しておりますので、プロフィール、写真の設定をお願いしております。</p>
+    </section>
+
+    <!-- フッター -->
+    <footer>
+        <p class="logo"><img alt="ロゴ" src="https://image.osiro.it/pass/media_libraries/7537/images/original/logo.png?1719286516" /></p>
+        <p class="copyright">&copy; 2024 Kubire Salon. All rights reserved.<br />powered by <a href="https://osiro.it/" target="_blank" rel="noopener">osiro</a></p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+    <script>
+        // Intersection Observer for animations
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        if (entry.target.classList.contains('fade-in')) {
+                            entry.target.classList.add('show');
+                        }
+                        if (entry.target.classList.contains('text-animation')) {
+                            const el = entry.target;
+                            const textContent = el.textContent;
+                            const htmlContent = el.innerHTML;
+                            const hasBreaks = /<br\s*\/?>/i.test(htmlContent);
+                            
+                            if (hasBreaks) {
+                                const lines = htmlContent.split(/<br\s*\/?>/i);
+                                const wrappedContent = lines.map(line => 
+                                    line.split('').map((char, i) => 
+                                        `<span style="animation-delay: ${i * 0.05}s">${char}</span>`
+                                    ).join('')
+                                ).join('<br>');
+                                el.innerHTML = wrappedContent;
+                            } else {
+                                const wrappedContent = textContent.split('').map((char, i) => 
+                                    `<span style="animation-delay: ${i * 0.05}s">${char}</span>`
+                                ).join('');
+                                el.innerHTML = wrappedContent;
+                            }
+                            
+                            el.classList.add('show');
+                            observer.unobserve(el);
+                        }
+                    }
+                });
+            });
+
+            // 監視を開始
+            document.querySelectorAll('.fade-in, .text-animation').forEach((el) => {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>
